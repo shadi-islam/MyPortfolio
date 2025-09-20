@@ -150,3 +150,88 @@ document.addEventListener('DOMContentLoaded', function () {
         once: true
     });
 });
+
+// scroll-to-top button
+
+
+const widgetContainer = document.querySelector('.scroll-widget-container');
+const scrollbtn = document.querySelector('.scroll-to-top');
+const hireMeImg = document.querySelector('.hireme'); // NEW: Select the image
+
+let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+let isImageShownOnMobile = false;
+
+let floatflag = false;
+
+
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 1200) {
+    scrollbtn.classList.add('show');
+    if (!floatflag) {
+      gsap.to(scrollbtn, {
+        y: -10,
+        duration: 2,
+        ease: 'sine.inOut', 
+        repeat: -1,
+        yoyo: true,
+      });
+      floatflag = true;
+    }
+  } else {
+    scrollbtn.classList.remove('show');
+  }
+});
+
+if (isTouchDevice) { 
+     scrollbtn.addEventListener('click', () => {
+        if (!isImageShownOnMobile) {
+            // First Tap: Show the image and the button scaling effect
+            gsap.to(hireMeImg, { opacity: 1, y: -10, duration: 0.3 });
+            gsap.to(scrollbtn, { scale: 1.2, duration: 0.3 });
+            isImageShownOnMobile = true;
+        } else {
+            // Second Tap: Hide the image and scroll to top
+            gsap.to(hireMeImg, { opacity: 0, y: 0, duration: 0.2 });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            isImageShownOnMobile = false; // Reset for next time
+        }
+    });
+}
+else {
+    widgetContainer.addEventListener('mouseenter', () => {
+    gsap.to(scrollbtn, {
+        scale: 1.2,
+        duration: 0.3,
+    });
+    gsap.to(hireMeImg, {
+        opacity: 1,
+        scale: 3,
+        y: -20, 
+        x: -20,
+        duration: 0.3,
+    });
+    });
+
+    widgetContainer.addEventListener('mouseleave', () => { 
+    gsap.to(scrollbtn, {
+        scale: 1,
+        duration: 0.3,
+    });
+    gsap.to(hireMeImg, {
+        opacity: 0,
+        y: 0, 
+        duration: 0.1,
+        ease: 'power2.out',
+    });
+    });
+
+}
+scrollbtn.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  gsap.to(hireMeImg, {
+    opacity: 0,
+    y: 0, 
+    duration: 0.3,
+    ease: 'power2.out',
+  }); 
+});
